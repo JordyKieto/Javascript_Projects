@@ -12,7 +12,7 @@ const quickSort = (list) => {
     list = list.slice(0,pivot).concat(list.slice(pivot + 1));
     //loop the list, comparing the partition values
     for (var item of list) {
-        item < pivotValue ? left.push(item) : right.push(item);
+        item< pivotValue ? left.push(item) : right.push(item);
     }
     //recursively move through left/right lists
     return quickSort(left).concat([pivotValue], quickSort(right))
