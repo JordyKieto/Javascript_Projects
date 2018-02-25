@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Gamedev Canvas Workshop</title>
+        <style>
+            * { padding: 0; margin: 0; }
+            canvas { background: #eee; display: block; margin: 0 auto; }
+        </style>
+    </head>
+    <body>
+
+        <canvas id="myCanvas" width="480" height="320"><</canvas>
+
+        <script>
+            // First we save our canvas element to a var
+            var canvas = document.getElementById("myCanvas");
+            // Ctx stores the 2d rendering context
+            var ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            // this defines a rectangle
+            //   first two coordinates of the top left corner of the rectangle on canvas
+            //   while the second two specify thw width & height of rectangle
+            ctx.rect(20, 40, 50, 50);
+            // this stores a color tht will be used by fill() to paint square red
+            ctx.fillStyle = "#FF0000";
+            // Fills the shapes with color
+            ctx.fill();
+            ctx.closePath();
+            // This makes a circle
+            // Notice repeat of beginPath & closePath
+            ctx.beginPath();
+            // Parametres of arc; 
+            //   x & y coordinates of arc centre
+            //   arc radius
+            //   start and end anngle
+            //   [opt] direction of drawing, false for clockwise | true for anticlockwise
+            ctx.arc(240, 160, 20, 0, Math.PI*2, false);
+            // Color can be specified as hex value, a color keyword the rgba() function etc.
+            ctx.fillStyle = 'green';
+            ctx.fill();
+            ctx.closePath();
+            // instead fill(), you can stroke() to target only outer stroke
+            ctx.beginPath();
+            ctx.rect(160, 10, 100, 40);
+            // The alpha channel makes blue semi transparent
+            ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
+            ctx.stroke();
+            ctx.closePath();
+        </script>
+    </body>
+</html>
