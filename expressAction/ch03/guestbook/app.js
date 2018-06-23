@@ -3,21 +3,22 @@ var http = require("http");
 var express = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
+var path = require("path")
 
 var app = express();
 
 app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
 
-var entires = [];               // creates a global array to store entries
-app.locals.entries = entries;   // makes entries array available in all views
+var entries = [];               // creates a global array to store entries
+app.locals.entries = entries;   // makes entries array available in all views COOL!
 
 app.use(logger("dev")); // uses Morgan to log every request
 
 app.use(bodyParser.urlencoded({ extended: false })); // populates a variabled called req.body is user is submitting a form
 
 app.get("/", function(request, response) {
-    response.render("index");       // renders @ view/index.ejs
+    response.render("index");       // renders @ view/index.ejs & so forth thx to earlier set()
 });
 
 app.get("/new-entry", function(request, response) {
