@@ -1,0 +1,15 @@
+// routers are isolated instances of middleware & routes
+// can be use()d by the app
+
+var express = require("express");
+var path = require("path");
+var apiRouter = require("./routes/api_router");
+
+var app = express();
+
+var staticPath = path.resolve(__dirname, "static");
+app.use(express.static(staticPath));
+
+app.use("/api", apiRouter); // any URL starting with /api will be sent to router
+
+app.listen(3000);

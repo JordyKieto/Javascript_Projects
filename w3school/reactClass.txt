@@ -1,0 +1,46 @@
+class ShoppingList extends React.Component {
+    render() {
+        return (
+            <div className="shopping-list";>
+            <h1>Shopping List for {this.props.name}{/h1}
+            <ul>
+                <li>Instagram</li>
+                <li>Nigga News</li>
+                <li>MSN</li>
+            </ul>
+            </div>
+        );
+    }
+}
+
+// <ShoppingList name="Mark />
+// a component takes in paramteres called props and returns a hierachy of views to display via render
+
+the above is written in JSX but compiles to
+
+React.createElement(
+    "div",
+    {className: "shopping-list  },
+    React.createElement(
+        "h1",
+        null,
+        "Shopping List for ",
+        props.name
+    ),
+    React.CreateElement(
+        "li",
+        null,
+        "Instagram"
+    ),
+    React.CreateElement(
+        "li",
+        null,
+        "Nigga News"
+    ),
+    React.CreateElement(
+        "li",
+        null,
+        "MSN"
+    )
+  )   
+);

@@ -1,0 +1,15 @@
+/* CSS clear Property 
+Do not allow floating elements on the left or right side of
+specified <p> element
+float is an img property that makes img float to a direction
+and wraps the text around that
+*/
+
+img {
+    float: left;
+  
+}
+
+p.clear {
+    clear: both;
+}
