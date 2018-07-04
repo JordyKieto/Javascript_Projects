@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.2.1/react.js'></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.2.1/react-dom.js"></script>
+    </head>
+    <body>
+        <div id="content"></div>
+        <script type="text/javascript">
+        var h1 = React.createElement('h1', null, 'Hello world!!')
+        ReactDOM.render(
+            /* How to make nested elements... */
+            React.createElement('div', null, h1, h1), /* If 3rd+ params aren't text they specificy parent child of elemtts/   */
+            document.getElementById('content')
+        )
+        </script>
+    </body>
+</html>

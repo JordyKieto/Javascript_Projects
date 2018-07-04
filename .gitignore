@@ -1,3 +1,7 @@
 reactTacToe/my-app/public/
 reactTacToe/my-app/.gitignore
 reactTacToe/my-app/public/
+reactTacToe/my-app/README.md
+reactTacToe/my-app/package-lock.json
+reactTacToe/my-app/package.json
+keys.json
