@@ -4,4 +4,16 @@ reactTacToe/my-app/public/
 reactTacToe/my-app/README.md
 reactTacToe/my-app/package-lock.json
 reactTacToe/my-app/package.json
-keys.json
+personalProjects/authApp/
+personalProjects/canuckWeatherApp/
+personalProjects/weather-app/.gitignore
+personalProjects/weather-app/README.md
+personalProjects/weather-app/package-lock.json
+personalProjects/weather-app/package.json
+react-google-maps-with-ref-solution/
+keys.js
+.vscode/
+blackbiz/
+keyTest.js
+keys.js
+maps.html

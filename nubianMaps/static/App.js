@@ -1,18 +1,31 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-module.exports = {"googleMaps" : "AIzaSyB-aXVbUPpSDRlJ8jghbOQBPnt6sUiprpY"}
+module.exports = {"googleMaps" : "AIzaSyB-aXVbUPpSDRlJ8jghbOQBPnt6sUiprpY",
+"darkSky": "ab713e88f2fe32023dfefcdc1df07d67"}
 
 },{}],2:[function(require,module,exports){
 var GoogleMapsLoader = require('google-maps');
-var keys = require('../keys')
+var keys = require('../../keys')
 var mapsKey = keys.googleMaps
 GoogleMapsLoader.KEY = mapsKey
+GoogleMapsLoader.LIBRARIES = ['places']
+
 
 
 class BlackMap extends React.Component {
 
     componentDidMount() {
+        fetch('/api/all').then(function(response){
+            response.json().then(function(data){
+                console.log(data)
+         
+        
         var obsidian = {
             lat: 43.663791, lng: -79.343618
+        }
+
+        var request = {
+            placeId: data,
+            fields: ['name']
         }
         GoogleMapsLoader.load(function(google)  {
             console.log('inside function')
@@ -23,13 +36,31 @@ class BlackMap extends React.Component {
             var marker = new google.maps.Marker({
                 position: obsidian,
                 map: map
-            })
+            });
+            var service = new google.maps.places.PlacesService(map);
+            service.getDetails(request, callback);
+
+            function callback(place, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    var infowindow = new google.maps.InfoWindow({
+                        content: place.name
+                    });
+                    marker.addListener('click', function(){
+                        console.log('click')
+                        infowindow.open(map, marker)
+                    })
+                }
+            }
+    
+
         })
+    })
+       })
     }
 
     render() {
         var mapStyle ={
-            width: "300px",
+            width: "100%",
             height: "400px"
         }
         return (
@@ -50,7 +81,7 @@ ReactDOM.render(
 
 // browserify -t reactify index.js -o App.js
 
-},{"../keys":1,"google-maps":3}],3:[function(require,module,exports){
+},{"../../keys":1,"google-maps":3}],3:[function(require,module,exports){
 (function(root, factory) {
 
 	if (root === null) {
