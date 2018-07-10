@@ -2,55 +2,66 @@ var GoogleMapsLoader = require('google-maps');
 var keys = require('../../keys')
 var mapsKey = keys.googleMaps
 GoogleMapsLoader.KEY = mapsKey
-GoogleMapsLoader.LIBRARIES = ['places']
-
-
+GoogleMapsLoader.LIBRARIES = ['geometry', 'places']
 
 class BlackMap extends React.Component {
 
     componentDidMount() {
+		var map;
+		var markers = {}
+		var infowindows = {}
         fetch('/api/all').then(function(response){
-            response.json().then(function(data){
-                console.log(data)
-         
-        
-        var obsidian = {
-            lat: 43.663791, lng: -79.343618
-        }
+            response.json().then(function(allBusinesses){
 
-        var request = {
-            placeId: data,
-            fields: ['name']
-        }
-        GoogleMapsLoader.load(function(google)  {
-            console.log('inside function')
-            var map = new google.maps.Map(document.getElementById('map'), {
-                center: obsidian,
-                zoom: 17
-            });
-            var marker = new google.maps.Marker({
-                position: obsidian,
-                map: map
-            });
-            var service = new google.maps.places.PlacesService(map);
-            service.getDetails(request, callback);
+                allBusinesses.forEach(function(business) {
 
-            function callback(place, status) {
-                if (status == google.maps.places.PlacesServiceStatus.OK) {
-                    var infowindow = new google.maps.InfoWindow({
-                        content: place.name
-                    });
-                    marker.addListener('click', function(){
-                        console.log('click')
-                        infowindow.open(map, marker)
-                    })
-                }
-            }
+                    var request = {
+                        placeId: business.placeID,
+                        fields: ['name', 'geometry']
+                    };
+                    // creates a map if none exists, centering it at index 0
+                    if (!map){
+                        GoogleMapsLoader.load(function(google)  {
+                            map = new google.maps.Map(document.getElementById('map'), {
+                                center: {
+									lat: 43.663791, lng: -79.343618
+								},
+                                zoom: 17
+                            });
+                        })
+                    }
+
+                    GoogleMapsLoader.load(function(google)  {
+					// places library
+					var service = new google.maps.places.PlacesService(map);
+					service.getDetails(request, callback);
+					
+                    function callback(place, status) {
+                        if (status == google.maps.places.PlacesServiceStatus.OK) {
+
+								// creates a marker & adds info box
+
+								var name = place.name
+								console.log(name)
     
-
+                        		markers[name] = new google.maps.Marker({
+                            	position: place.geometry.location,
+                            	map: map
+								});
+					
+                            	infowindows[name] = new google.maps.InfoWindow({
+                                content: place.name
+                            });
+                            markers[name].addListener('click', function(){
+                                console.log('click')
+                                infowindows[name].open(map, markers[name])
+							})
+							
+                        }
+					}
+				});
+            }); })
         })
-    })
-       })
     }
 
     render() {
@@ -59,7 +70,7 @@ class BlackMap extends React.Component {
             height: "400px"
         }
         return (
-            <div id="map" style={mapStyle}></div>
+            React.createElement("div", {id: "map", style: mapStyle})
         )
     }
 }
@@ -67,9 +78,8 @@ class BlackMap extends React.Component {
 
 
 
-
 ReactDOM.render(
-    <BlackMap />,
+    React.createElement(BlackMap, null),
     document.getElementById('root')
 
 );
