@@ -6,23 +6,56 @@ var Route = require('react-router-dom').Route
 var Link = require('react-router-dom').Link
 var Router = require('react-router-dom').Router
 
-function PlaceSearchBar() {
-    return(
-        <input id="pac-input" className="controls" type="text"
-        placeholder="Enter a location"/>
-    )
-}
+class AdminListView extends React.Component {
 
-function submitBusiness() {
-    return(
-        <form action="/api/businesses" method="POST">
-        <input type="radio" name="category" value="entertainment">Entertainment</input><br></br>
-        <input type="radio" name="category" value="networking">Networking</input><br></br>
-        <input type="radio" name="category" value="food">Food</input><br></br>
-        <input type="radio" name="category" value="Cosmetics">Cosmetics</input><br></br>
-        <input type="submit" value="Submit"></input>
-        </form>
-    )
+    componentDidMount() {
+        fetch('/api/businesses/all').then(function(response){
+            response.json().then(function(allEntries){
+                allEntries.forEach(function(entry, index, array) {
+                    var node = document.createElement("DIV")
+                    var textnode = document.createTextNode(entry.name)
+                    var form = document.getElementById("form")
+                    var submit = document.getElementById("submitID")
+                    node.appendChild(textnode)
+                    var input = document.createElement("INPUT")
+                    input.setAttribute('type', 'checkbox')
+                    input.setAttribute('name', entry.name)
+                    input.setAttribute('value', entry._id)
+                    node.appendChild(input)
+                    document.getElementById("form").appendChild(node)
+                    form.insertBefore(node, submit)
+
+        })
+    })})}
+
+    handlesubmit  (event)  {
+        event.preventDefault()
+        var entries = [];
+        var formData = new FormData(event.target)
+        for (let entry of formData.entries()) {
+            entries.push(entry[1]);
+            console.log(entries);
+        }
+        fetch('/api/businesses', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'},
+            method: 'delete',
+            body: JSON.stringify(entries)})
+    
+    }
+
+    render () {
+        return (
+            <form onSubmit={this.handlesubmit} id="form">
+            <h1>List View</h1>
+            <div id="submitID">
+            <br/>
+            <input  type="submit"  value="Delete"/>
+            </div>
+            </form>
+        )
+    }
 }
 
 class AdminMap extends React.Component {
@@ -187,7 +220,11 @@ class MainMap extends React.Component {
 const App = () => (
  
     <div>
-    <h1 style={styles.header}>Nubian Maps </h1>
+    
+    <div style={styles.header}>
+    <img style={styles.logo} src="africaLogo.png"/>
+    <h1 style={styles.h1}>NUBIAN MAPS</h1>
+    </div>
     <ul style={styles.nav}>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/entertainment">Entertainment</NavLink>
@@ -202,6 +239,7 @@ const App = () => (
     <Route exact path="/cosmetics" render={(props) => <MainMap {...props} category={'cosmetics'}/>} />
     <Route exact path="/networking" render={(props) => <MainMap {...props} category={'networking'}/>} />
     <Route path="/admin" component={AdminMap}/>
+    <Route path="/listview" component={AdminListView}/>
     </div>
 
 )
@@ -234,12 +272,13 @@ styles.nav = {
   };
 
   styles.header = {
-      textAlign: "center",
+ //     textAlign: "center",
       width: "100%",
       height: "50px",
       padding: 0,
       margin: 0,
-      backgroundColor: "#737373"
+      backgroundColor: "black",
+      color: "white"
 
   }
 
@@ -255,6 +294,19 @@ styles.nav = {
       padding: "0 11px 0 13px",
       width: "400px"
 
+  }
+
+  styles.logo = {
+      width: 50,
+  }
+
+  styles.h1 = {
+    textAlign: "left",
+    top: -5,
+    width: "100%",
+    left: "70px",
+    zIndex: 1,
+    position: "absolute"
   }
 
 ReactDOM.render(

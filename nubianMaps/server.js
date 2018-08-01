@@ -3,9 +3,11 @@ var MongoClient = require("mongodb").MongoClient;
 var http = require("http");
 var path = require("path");
 var bodyParser = require('body-parser');
+var ObjectID = require('mongodb').ObjectID;
 
 var app = express();
 app.use(bodyParser.urlencoded({ extended: true}))
+app.use(bodyParser.text({type: 'json'}))
 app.use(express.static('static'))
 
 app.get('/api/businesses/all', function(request, response) {
@@ -36,9 +38,19 @@ app.post('/api/businesses', function(request, response){
                                             category: request.body.category, 
                                             placeID: request.body.placeID
                                          });
-    response.status(200)
+    // indicates success and "stay on current page"
+    response.status(204)
     response.end()
 });
+
+app.delete('/api/businesses', function(request, response){
+    var idArray = [];
+    JSON.parse(request.body).forEach(function(id) {
+        idArray.push(ObjectID(id))
+    })
+    console.log(idArray)
+    db.collection("businesses").remove({ "_id": { $in: idArray }})
+})
 
 app.get('/*', function(req, res) {
     res.sendFile(path.join(__dirname, 'static/index.html'), function(err) {
