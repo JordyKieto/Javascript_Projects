@@ -8,8 +8,20 @@ var Router = require('react-router-dom').Router
 
 function PlaceSearchBar() {
     return(
-        <input id="pac-input" class="controls" type="text"
+        <input id="pac-input" className="controls" type="text"
         placeholder="Enter a location"/>
+    )
+}
+
+function submitBusiness() {
+    return(
+        <form action="/api/businesses" method="POST">
+        <input type="radio" name="category" value="entertainment">Entertainment</input><br></br>
+        <input type="radio" name="category" value="networking">Networking</input><br></br>
+        <input type="radio" name="category" value="food">Food</input><br></br>
+        <input type="radio" name="category" value="Cosmetics">Cosmetics</input><br></br>
+        <input type="submit" value="Submit"></input>
+        </form>
     )
 }
 
@@ -28,8 +40,6 @@ class AdminMap extends React.Component {
             map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
             var infowindow = new google.maps.InfoWindow();
-            var infowindowContent = document.getElementById('infowindow-content');
-            infowindow.setContent(infowindowContent);
             var marker = new google.maps.Marker({
                 map: map
             });
@@ -56,11 +66,17 @@ class AdminMap extends React.Component {
                     location: place.geometry.location
                 });
                 marker.setVisible(true);
-
-                infowindowContent.children['place-name'].textContent = place.name;
-                infowindowContent.children['place-id'].textContent = place.place_id;
-                infowindowContent.children['place-address'].textContent =
-                    place.formatted_address;
+                var infowindowContent = (place.name +'<br>'+ place.formatted_address +'<br><br>'
+                +'<form action="/api/businesses" method="POST">'
+                +'<input type="hidden" name="placeID" value='+place.place_id+'></input>'
+                +'<input type="hidden" name="name" value='+place.name+'></input>'
+                +'<input type="radio" name="category" value="entertainment">Entertainment</input><br></br>'
+                +'<input type="radio" name="category" value="networking">Networking</input><br></br>'
+                +'<input type="radio" name="category" value="food">Food</input><br></br>'
+                +'<input type="radio" name="category" value="cosmetics">Cosmetics</input><br></br>'
+                +'<input type="submit" value="Submit"></input>'
+                +'</form>')
+                infowindow.setContent(infowindowContent);
                 infowindow.open(map, marker)
             });
         });
@@ -73,8 +89,13 @@ class AdminMap extends React.Component {
         }
         return (
         <div>
+
         <div id="map" style={mapStyle}></div>
-        <input id="pac-input" class="controls" type="text"
+
+        <div id="infowindow-content">
+        </div>
+
+        <input id="pac-input" className="controls" type="text" style={styles.controls}
         placeholder="Enter a location"/>
         </div>
          //   React.createElement("div", {id: "map", style: mapStyle},
@@ -177,6 +198,8 @@ const App = () => (
     </ul>
     <Route exact path="/" render={(props) => <MainMap {...props} category={'all'}/>} />
     <Route exact path="/entertainment" render={(props) => <MainMap {...props} category={'entertainment'}/>} />
+    <Route exact path="/food" render={(props) => <MainMap {...props} category={'food'}/>} />
+    <Route exact path="/cosmetics" render={(props) => <MainMap {...props} category={'cosmetics'}/>} />
     <Route exact path="/networking" render={(props) => <MainMap {...props} category={'networking'}/>} />
     <Route path="/admin" component={AdminMap}/>
     </div>
@@ -217,6 +240,20 @@ styles.nav = {
       padding: 0,
       margin: 0,
       backgroundColor: "#737373"
+
+  }
+
+  styles.controls = {
+      backgroundColor: "#fff",
+      borderRadius: "2px",
+      broder: "1px solid transparent",
+      boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+      boxSizing: "border-box",
+      marginLeft: "17px",
+      height: "29px",
+      marginTop:"10px",
+      padding: "0 11px 0 13px",
+      width: "400px"
 
   }
 

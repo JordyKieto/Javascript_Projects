@@ -1,9 +1,11 @@
 var express = require("express");
 var MongoClient = require("mongodb").MongoClient;
 var http = require("http");
-var path = require("path")
+var path = require("path");
+var bodyParser = require('body-parser');
 
 var app = express();
+app.use(bodyParser.urlencoded({ extended: true}))
 app.use(express.static('static'))
 
 app.get('/api/businesses/all', function(request, response) {
@@ -28,8 +30,14 @@ app.get('/api/businesses/:category', function(request, response) {
 });
 
 app.post('/api/businesses', function(request, response){
-    db.collection("businesses").insertOne({request})
+    var body = request.body
+    console.log(request.body)
+    db.collection("businesses").insertOne({ name: request.body.name, 
+                                            category: request.body.category, 
+                                            placeID: request.body.placeID
+                                         });
     response.status(200)
+    response.end()
 });
 
 app.get('/*', function(req, res) {
