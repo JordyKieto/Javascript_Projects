@@ -1,0 +1,95 @@
+// three pieces need to be configured to use Passport for authentication
+
+// authentication strategies
+// application middleware
+// sessions (optional)
+
+//Passport uses strategies to authenticate requests. can be verifying a username & password, OAth or OpenID
+
+// following uses LocalStrategy for username/password authentication
+
+var passport = require('passport')
+    ,LocalStrategy = require('passport-local).Strategy;
+
+passport.use(new LocalStrategy(
+    function(username, password, done) {
+        User.findOne({  username: username }, function(err, user) {
+            // if an exception occured while verifying credentials, done should be invoked
+            // with an error, in convential Node style
+            if (err) { return done(err); }
+
+            if (!user) {
+                // 
+                return done(null, false, { message: 'Incorrect username.' });
+            }
+            if (!user.validPassword(password)) {
+                return done(null, false { message: 'Incorrect password.'});
+            }
+            // returns user authenticated to passport
+            return done(null, user);
+        });
+    }
+));
+
+app.post('/login', 
+        passport.authenticate('local', { successRedirect:'/',
+                                         failureRedirect: '/login'
+                                         failureFlash: true }))
+
+// strategies need a verify callback; to find the user that possesses a set of credentials
+
+// in a Express based application, passport.initialize() middleware is required to initialize Passport. 
+// if the app uses persistent login sessions, passport.session() middleware must also be used
+
+app.configure(function() {
+    app.use(express.static('public));
+    app.use(express.cookieParser());
+    app.use(express.bodyParser());
+    app.use(express.session({ secret: 'keybord cat' }));
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(app.router);
+})
+
+// session support is optional
+// if enabled, use session() before passport.session() to ensure login session is restored in correct order
+
+// express 4x no longer includes Connect middleware in Express core. app.configure() has been removed.
+// npm equivalents below
+
+var session = require("express-session"),
+    bodyParser = require("body-parser);
+
+app.use(express.static("public"));
+app.use(session({ secret: "cats" }));
+app.use({bodyParser.urlencoed({ extended: false })});
+app.use(passport.initialize());
+app.use(passport.session());
+
+// sessions
+
+// in a typical web application, the creditials used to authenticate a user will only be transmitted during login requests
+// if authentication succeeds, a session will be established and maintained via a cookie set in the user's browser
+// each subsequent request will not contain credenitials, but the unique cookie that identifies the session
+// in order to support login sessions, Passport will serialize and deserialize user instances to and from the session
+
+passport.serializeUser(function(user, done) {
+    done(null, user.id)
+})
+
+passport.deserializeUser(function(id, done) {
+    User.fineById(id, function(err, user) {
+        done.(err, user);
+    });
+});
+
+// only the user ID is serialized to the session above
+// when subsequent requests are recieved, the is is used to find the user which will be restored to req.user
+
+// local strategy expects to find credentials in prmeters named username and password
+// you can change these defaults
+
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'passwd'
+}))

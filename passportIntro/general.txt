@@ -1,0 +1,65 @@
+// each applicarion has unique authentication requirmenets.
+ these mechs are known as strategies
+
+ app.post('/login', passport.authenticate('local', { successRedirect: '/',
+                                                     failureRedirect: '/login' }));   // redirects often after authenticating a request
+
+app.post('login',
+    passport.authenticate('local'),
+    function(req, res) {
+        // if this function gets called, authetication ws susccesful
+        // 'req.user' contains the authenticated users.
+        res.redirect('/users/' + req.user.usernme);
+    });
+
+// by default, if auth fails, Passport will respond with a 401 Unauthorized status and no more route handlers invoked
+//  if auth succeeds, the next handler will be invoked, and the req.user property will be set to authenticated user
+//  strategies must be configured before using them in a route
+
+// flash messages
+
+// redirects are often combined with flash messages in order to display status information to the user
+
+ app.post('/login', passport.authenticate('local', { successRedirect: '/',
+                                                     failureRedirect: '/login' 
+                                                     failureFlash: true}));   // instructs Passport to flash an error given by strategys callback if any
+
+// or set specifically
+
+passport.authenticate('local', { failureFlash: 'Invalid username or password'});
+passport.authenticate('local', { successFlash: 'Welcome!'});
+
+// use of flash messages requires req.flash(), use of connect-flash functionality is recommended
+
+// sessions
+
+// after succesfful authentiation, Passport will establish a persistent login session.
+// API servers typically require credentials to be supplied with each request; in this case session support can be safely disabled by setting sessions option false
+
+app.get('/api/users/me'.
+    passport.authenticate('basic', { session: false }), 
+    function(req, res) {
+        res.json({ id: req.user.id, username: req.user.username });
+    });
+
+// if the built in options are not sufficient for handling an authentiction request, 
+// a custom callbck can be provided to allow the appliction to hndle success or failure
+
+app.get('/login', function(req, res, next) {
+    passport.authenticate('local', function(err, user, info) {
+        if (err) { return next(err); }
+
+        if (!user) { return res.redirect('/login'); }
+
+        req.logIn(user, function(err) {
+            if (err) { return next(err); }
+            return res.redirect('/users/' + user.username);
+        });
+    }) (req, res, next);
+})
+
+// in the above example authenticate is called within the route handler instead of used as midddleware
+// giving us access to req and res objects through closure
+// if authentication failed user will be set to false, if exception err will be set
+// optional info argument is passed containing details passed by strategy's verify callback
+// when using a custom callback the appliction is responsible for calling req.login
