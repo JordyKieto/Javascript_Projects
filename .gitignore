@@ -1,3 +1,4 @@
+node_modules/
 reactTacToe/my-app/public/
 reactTacToe/my-app/.gitignore
 reactTacToe/my-app/public/
@@ -12,6 +13,19 @@ personalProjects/weather-app/package-lock.json
 personalProjects/weather-app/package.json
 react-google-maps-with-ref-solution/
 nubianMaps\static\App.js
+nubianMaps/.babelrc
+nubianMaps/.gitignore
+nubianMaps/README.md
+nubianMaps/client/
+nubianMaps/package-lock.json
+nubianMaps/package.json
+nubianMaps/server/
+nubianMaps/test/
+bootcamp/
+jestTutorial/node_modules/
+portfolioWebsite/
+classRepo/
+analyticsFire/
 keys.js
 .vscode/
 blackbiz/

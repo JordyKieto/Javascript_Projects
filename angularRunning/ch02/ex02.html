@@ -1,0 +1,32 @@
+<!– boostraping the html tag with ng-app directive –>
+<html ng-app="notesApp">
+    <head>
+        <title>Hello AngularJS</title>
+        <body ng-controller="MainCtrl as ctrl">
+            {{ctrl.helloMsg}} AngularJS.
+            <br/>
+            {{ctrl.goodbyeMsg}} AngularJS
+            <br/>
+            {{ctrl.farewell}} Never Seen
+        <script 
+        src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+        </script>
+        <script type="text/javascript">
+        // controllers trigger most UI work
+        //      fetching data, presentation logic, user interaction(ie. clicks)
+        // defining the module that we use
+        angular.module('notesApp', [])
+        .controller('MainCtrl', [function(){
+            // variables defined on this are accesible from HTML but not local vars
+            this.helloMsg = 'Hello';
+            var farewell = 'Goodbye';
+            this.goodbyeMsg = `${farewell} champion`
+            // first argument of .controller() is name of controller
+            //      second is an array with list of dependencies, 
+            //              last element is actual controller function
+            console.log('MainCtrl has been created');
+        }]);
+        </script>
+        </body>
+    </head>
+</html>

@@ -1,0 +1,27 @@
+<html ng-app="nameChanger">
+    <body ng-controller="MainCtrl as ctrl">
+        <h1>{{ ctrl.name}}</h1>
+        <button ng-click="ctrl.changeName()"></button>
+        <script
+        src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+        </script>
+        <script
+        type="text/javascript">
+        angular.module('nameChanger', [])
+            .controller('MainCtrl', [function(){
+            this.name = "Jekel"
+            this.changed = false
+            this.changeName = function(){
+                    if (this.changed) {
+                    this.name = 'Hyde';
+                    this.changed = false;
+                    } else {
+                    this.name = 'Jekel';
+                    this.changed = true;
+                    }
+            };
+            }]);
+        </script>
+    </body>
+
+</html>
