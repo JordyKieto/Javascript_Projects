@@ -1,4 +1,6 @@
 node_modules/
+nodeBlueprints/chapter-01/package-lock.json
+nodeBlueprints/chapter-02/package-lock.json
 reactTacToe/my-app/public/
 reactTacToe/my-app/.gitignore
 reactTacToe/my-app/public/
